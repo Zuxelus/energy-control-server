@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #cards {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+      }
+      div.card {
+        border: 1px solid black;
+        border-radius: 5px;
+        width: 300px;
+        min-width: 300px;
+        background-color: #eeeeee;
+        padding: 0 10px;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Energy Control Panel</h1>
+    <div id="info"></div>
+    <div id="cards"></div>
+    <script>
+      const socket = new WebSocket('ws://HOST:PORT/?token=TOKEN&id=CLIENTID');
+      const info = document.getElementById('info');
+      const cardsDiv = document.getElementById('cards');
+
+      const writeLine = (text) => {
+        const line = document.createElement('div');
+        line.innerHTML = '<p>' + text + '</p>';
+        info.appendChild(line);
+      };
+
+      socket.addEventListener('open', () => {
+        writeLine('connected');
+      });
+
+      socket.addEventListener('close', () => {
+        writeLine('closed');
+      });
+
+      socket.addEventListener('message', ({ data }) => {
+        var json = JSON.parse(data);
+        json.cards.forEach((card) => {
+          var div = document.getElementById(card.id);      
+          if (!div) {        
+            div = document.createElement('div');
+            div.id = card.id;
+            div.classList.add('card');
+            cardsDiv.appendChild(div);
+          }
+          div.innerHTML = '';
+          card.lines.forEach((line) => {
+              p = document.createElement('p');
+              if (line.left)
+                p.innerHTML = line.left;
+              if (line.center) {
+                p.innerHTML = line.center;
+                p.style.textAlign = "center";
+              }
+              if (line.right) {
+                p.innerHTML = line.right;
+                p.style.textAlign = "right";
+              }
+              div.appendChild(p);
+            });
+        });
+        //writeLine(data);
+      });
+    </script>
+  </body>
+</html>

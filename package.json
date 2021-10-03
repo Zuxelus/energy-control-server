@@ -1,0 +1,14 @@
+{
+  "name": "energy-control-server",
+  "version": "1.0.0",
+  "description": "Web Socket server for Energy Control mod",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zuxelus",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^8.2.2"
+  }
+}
